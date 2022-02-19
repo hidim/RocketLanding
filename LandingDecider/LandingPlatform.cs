@@ -1,6 +1,7 @@
 ﻿using LandingDecider.Helper;
 using LandingDecider.Model;
 using System;
+using System.Linq;
 
 namespace LandingDecider
 {
@@ -93,7 +94,56 @@ namespace LandingDecider
             return is_valid;
         }
 
+        public string LandingQuery(string rocketId, int landingXAxis, int landingYAxis)
+        {
+            string oResponse = string.Empty;
 
+            // Get data from landing platfom.
+            LandingPlatformModel landingPlatformModel = new LandingPlatformModel();
+            landingPlatformModel = jsonDataHelper.ReadPlatform();
+
+            if (landingPlatformModel == null)
+            {
+                landingPlatformModel.LandingAreaHeight = landingArea.Height;
+                landingPlatformModel.LandingAreaWidth = landingArea.Width;
+
+                landingPlatformModel.PlatformWidth = landingPlatform.Width;
+                landingPlatformModel.PlatgormHeight = landingPlatform.Height;
+
+                landingPlatformModel.StartIndexX = startIndex.Width;
+                landingPlatformModel.StartIndexY = startIndex.Height;
+            }
+
+            // Requested coordinates is in landing platform?
+            if (landingXAxis < startIndex.Width || landingXAxis > startIndex.Width + landingPlatform.Width
+                || landingYAxis < startIndex.Height || landingYAxis > startIndex.Height + landingPlatform.Height)
+                return "out of platform";
+
+            if (landingPlatformModel.PreviousRockets != null)
+            {
+                foreach (var prevRocket in landingPlatformModel.PreviousRockets)
+                {
+                    if (prevRocket.RocketName != rocketId)
+                    {
+                        if (landingXAxis >= prevRocket.LandingArea.Width - 1 && landingXAxis <= prevRocket.LandingArea.Width + 1)
+                            return "clash";
+
+                        if (landingYAxis >= prevRocket.LandingArea.Height - 1 && landingYAxis <= prevRocket.LandingArea.Height + 1)
+                            return "clash";
+                    }
+                }
+            }
+            else
+                landingPlatformModel.PreviousRockets = new System.Collections.Generic.List<RocketLandingModel>();
+
+            landingPlatformModel.PreviousRockets.Remove(landingPlatformModel.PreviousRockets.Where(_t => _t.RocketName == rocketId).FirstOrDefault());
+            landingPlatformModel.PreviousRockets.Add(new RocketLandingModel { RocketName = rocketId, LandingArea = new SquareModel { Width = landingXAxis, Height = landingYAxis } });
+
+            // Write data to landing platform.
+            jsonDataHelper.WritePlatform(landingPlatformModel);
+
+            return "ok for landing";
+        }
 
         ~LandingPlatform()
         {

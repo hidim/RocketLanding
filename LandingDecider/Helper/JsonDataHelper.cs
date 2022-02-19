@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using LandingDecider.Model;
+using Newtonsoft.Json;
 using System.IO;
 using System.Reflection;
 
@@ -16,7 +17,7 @@ namespace LandingDecider.Helper
             rootPath = filePath;
         }
 
-        public void WritePlatform(object obj)
+        public void WritePlatform(LandingPlatformModel obj)
         {
             using (StreamWriter writer = new StreamWriter(rootPath))
             {
@@ -24,12 +25,12 @@ namespace LandingDecider.Helper
             }
         }
 
-        public object ReadPlatform()
+        public LandingPlatformModel ReadPlatform()
         {
-            object result;
+            LandingPlatformModel result;
             using (StreamReader reader = new StreamReader(rootPath))
             {
-                result = JsonConvert.DeserializeObject<object>(reader.ReadToEnd());
+                result = JsonConvert.DeserializeObject<LandingPlatformModel>(reader.ReadToEnd());
                 reader.Close();
             }
             return result;
