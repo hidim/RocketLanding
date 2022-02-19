@@ -1,10 +1,13 @@
-﻿using LandingDecider.Model;
+﻿using LandingDecider.Helper;
+using LandingDecider.Model;
 using System;
 
 namespace LandingDecider
 {
-    public class LandingPlatform
+    public class LandingPlatform : IDisposable
     {
+        private JsonDataHelper jsonDataHelper;
+
         /// <summary>
         /// Gets or sets Landing area as a square model.
         /// </summary>
@@ -34,6 +37,8 @@ namespace LandingDecider
 
             // Platform's start index as coordinates (box is a minimum diamater)
             this.startIndex = new SquareModel { Width = 5, Height = 5 };
+
+            jsonDataHelper = new JsonDataHelper();
         }
 
         /// <summary>
@@ -86,6 +91,20 @@ namespace LandingDecider
                 is_valid = true;
 
             return is_valid;
+        }
+
+
+
+        ~LandingPlatform()
+        {
+            // Empties the platform when dispose.
+            jsonDataHelper.EmptyPlatform();
+        }
+
+        public void Dispose()
+        {
+            // Empties the platform when dispose.
+            jsonDataHelper.EmptyPlatform();
         }
     }
 }
