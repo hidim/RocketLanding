@@ -122,6 +122,7 @@ namespace LandingDecider
                 || landingYAxis < startIndex.Height || landingYAxis > startIndex.Height + landingPlatform.Height)
                 return "out of platform";
 
+            // If there is any rocket queries is on platform
             if (landingPlatformModel.PreviousRockets != null)
             {
                 foreach (var prevRocket in landingPlatformModel.PreviousRockets)
@@ -139,7 +140,10 @@ namespace LandingDecider
             else
                 landingPlatformModel.PreviousRockets = new System.Collections.Generic.List<RocketLandingModel>();
 
+            // Check if there is any successfull landing information about specific rocket and clear it.
             landingPlatformModel.PreviousRockets.Remove(landingPlatformModel.PreviousRockets.Where(_t => _t.RocketName == rocketId).FirstOrDefault());
+            
+            // Add specific rocket for successfull landing operation for future instances.
             landingPlatformModel.PreviousRockets.Add(new RocketLandingModel { RocketName = rocketId, LandingArea = new SquareModel { Width = landingXAxis, Height = landingYAxis } });
 
             // Write data to landing platform.
@@ -148,12 +152,18 @@ namespace LandingDecider
             return "ok for landing";
         }
 
+        /// <summary>
+        /// Clear landing area for future operations.
+        /// </summary>
         ~LandingPlatform()
         {
             // Empties the platform when dispose.
             jsonDataHelper.EmptyPlatform();
         }
 
+        /// <summary>
+        /// Clear landing area for future operations.
+        /// </summary>
         public void Dispose()
         {
             // Empties the platform when dispose.
