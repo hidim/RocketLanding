@@ -12,7 +12,7 @@ namespace LandingDecider
         /// <summary>
         /// Gets or sets Landing area as a square model.
         /// </summary>
-        private SquareModel landingArea { get; set; }
+        public SquareModel landingArea { get; set; }
 
         /// <summary>
         /// Gets or sets Landing Platform as a square model.
