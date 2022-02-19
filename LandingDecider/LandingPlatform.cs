@@ -104,14 +104,17 @@ namespace LandingDecider
 
             if (landingPlatformModel == null)
             {
-                landingPlatformModel.LandingAreaHeight = landingArea.Height;
-                landingPlatformModel.LandingAreaWidth = landingArea.Width;
+                landingPlatformModel = new LandingPlatformModel
+                {
+                    LandingAreaHeight = landingArea.Height,
+                    LandingAreaWidth = landingArea.Width,
 
-                landingPlatformModel.PlatformWidth = landingPlatform.Width;
-                landingPlatformModel.PlatgormHeight = landingPlatform.Height;
+                    PlatformWidth = landingPlatform.Width,
+                    PlatgormHeight = landingPlatform.Height,
 
-                landingPlatformModel.StartIndexX = startIndex.Width;
-                landingPlatformModel.StartIndexY = startIndex.Height;
+                    StartIndexX = startIndex.Width,
+                    StartIndexY = startIndex.Height,
+                };
             }
 
             // Requested coordinates is in landing platform?

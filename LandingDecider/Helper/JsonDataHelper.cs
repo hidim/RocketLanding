@@ -28,6 +28,10 @@ namespace LandingDecider.Helper
         public LandingPlatformModel ReadPlatform()
         {
             LandingPlatformModel result;
+
+            if (!System.IO.File.Exists(rootPath))
+                System.IO.File.CreateText(rootPath);
+
             using (StreamReader reader = new StreamReader(rootPath))
             {
                 result = JsonConvert.DeserializeObject<LandingPlatformModel>(reader.ReadToEnd());
